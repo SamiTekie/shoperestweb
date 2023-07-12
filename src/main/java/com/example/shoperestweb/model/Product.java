@@ -31,4 +31,13 @@ public class Product {
     @JsonIgnoreProperties({"hibernateLazyInitializer"})
     @NotNull
     private ProductCategory productCategory;
+
+    public Product(Long productId, String productName, double productPrice,
+                   String productDescription, ProductCategory productCategory) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productDescription = productDescription;
+        this.productCategory = productCategory;
+    }
 }

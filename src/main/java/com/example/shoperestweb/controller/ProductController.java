@@ -1,11 +1,14 @@
 package com.example.shoperestweb.controller;
 
+import com.example.shoperestweb.dto.DTOConverter;
+import com.example.shoperestweb.dto.ProductDTO;
 import com.example.shoperestweb.model.Product;
 import com.example.shoperestweb.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -18,27 +21,35 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return products.stream()
+                .map(DTOConverter::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    public ProductDTO getProductById(@PathVariable int id) {
+        Product product = productService.getProductById(id);
+        return DTOConverter.convertToDTO(product);
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
+        Product product = DTOConverter.convertToEntity(productDTO);
+        Product createdProduct = productService.createProduct(product);
+        return DTOConverter.convertToDTO(createdProduct);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    public ProductDTO updateProduct(@PathVariable int id, @RequestBody ProductDTO productDTO) {
+        Product product = DTOConverter.convertToEntity(productDTO);
+        Product updatedProduct = productService.updateProduct(id, product);
+        return DTOConverter.convertToDTO(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);
     }
 }
