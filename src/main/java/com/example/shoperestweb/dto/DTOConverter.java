@@ -25,7 +25,7 @@ public class DTOConverter {
 
     public static ProductCategoryDTO convertToDTO(ProductCategory productCategory) {
         ProductCategoryDTO dto = new ProductCategoryDTO();
-        dto.setProductCategoryId(productCategory.getProductCategoryId());
+        dto.setProductCategoryId(Math.toIntExact(productCategory.getProductCategoryId()));
         dto.setProductCategoryName(productCategory.getProductCategoryName());
         return dto;
     }
@@ -46,7 +46,7 @@ public class DTOConverter {
         if (productDTO.getProductCategory() != null) {
             ProductCategoryDTO productCategoryDTO = productDTO.getProductCategory();
             ProductCategory productCategory = new ProductCategory();
-            productCategory.setProductCategoryId(productCategoryDTO.getProductCategoryId());
+            productCategory.setProductCategoryId((long) productCategoryDTO.getProductCategoryId());
             productCategory.setProductCategoryName(productCategoryDTO.getProductCategoryName());
             product.setProductCategory(productCategory);
         }
@@ -57,7 +57,7 @@ public class DTOConverter {
 
     public static ProductCategory convertToEntity(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setProductCategoryId(productCategoryDTO.getProductCategoryId());
+        productCategory.setProductCategoryId((long) productCategoryDTO.getProductCategoryId());
         productCategory.setProductCategoryName(productCategoryDTO.getProductCategoryName());
         return productCategory;
     }

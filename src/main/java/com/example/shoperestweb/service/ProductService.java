@@ -18,7 +18,8 @@ public class ProductService {
     private final ProductCategoryRepository productCategoryRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository) {
+    public ProductService(ProductRepository productRepository,
+                          ProductCategoryRepository productCategoryRepository) {
         this.productRepository = productRepository;
         this.productCategoryRepository = productCategoryRepository;
     }
@@ -33,18 +34,16 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
-        // Fetch the associated ProductCategory object if it is not null
         if (product.getProductCategory() != null) {
-            Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(product.getProductCategory().getProductCategoryId());
+            Integer productCategoryId = Math.toIntExact(product.getProductCategory().getProductCategoryId()); // Use Integer here
+            Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
             if (productCategoryOptional.isPresent()) {
                 ProductCategory productCategory = productCategoryOptional.get();
-                // Set the ProductCategory object in the Product entity
                 product.setProductCategory(productCategory);
             } else {
                 throw new IllegalArgumentException("Invalid Product Category");
             }
         }
-
         return productRepository.save(product);
     }
 
@@ -53,12 +52,11 @@ public class ProductService {
         if (existingProductOptional.isPresent()) {
             Product existingProduct = existingProductOptional.get();
 
-            // Fetch the associated ProductCategory object if it is not null
             if (product.getProductCategory() != null) {
-                Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(product.getProductCategory().getProductCategoryId());
+                Integer productCategoryId = Math.toIntExact(product.getProductCategory().getProductCategoryId()); // Use Integer here
+                Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
                 if (productCategoryOptional.isPresent()) {
                     ProductCategory productCategory = productCategoryOptional.get();
-                    // Update the fields in the existing Product entity
                     existingProduct.setProductName(product.getProductName());
                     existingProduct.setProductPrice(product.getProductPrice());
                     existingProduct.setProductDescription(product.getProductDescription());
@@ -67,17 +65,17 @@ public class ProductService {
                     throw new IllegalArgumentException("Invalid Product Category");
                 }
             } else {
-                // Handle the case where the new product does not have a ProductCategory
                 existingProduct.setProductName(product.getProductName());
                 existingProduct.setProductPrice(product.getProductPrice());
                 existingProduct.setProductDescription(product.getProductDescription());
-                existingProduct.setProductCategory(null); // Set the ProductCategory to null
+                existingProduct.setProductCategory(null);
             }
 
             return productRepository.save(existingProduct);
         }
         return null;
     }
+
 
     public void deleteProduct(int id) {
         productRepository.deleteById((long) id);

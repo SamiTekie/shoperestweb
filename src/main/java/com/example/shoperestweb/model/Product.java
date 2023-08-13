@@ -26,15 +26,14 @@ public class Product {
     @Column(name = "product_description")
     private String productDescription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_category_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer"})
     @NotNull
     private ProductCategory productCategory;
 
-    public Product(Long productId, String productName, double productPrice,
+    public Product(String productName, double productPrice,
                    String productDescription, ProductCategory productCategory) {
-        this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDescription = productDescription;
