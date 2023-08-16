@@ -4,8 +4,6 @@ import java.util.Base64;
 
 public class BasicAuthEncoder {
     public static void main(String[] args) {
-//        String username = "admin";
-//        String password = "admin123";
 
         String username = "sami";
         String password = "tekie";
