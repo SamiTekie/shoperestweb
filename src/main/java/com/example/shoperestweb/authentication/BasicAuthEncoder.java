@@ -1,11 +1,14 @@
-package com.example.shoperestweb;
+package com.example.shoperestweb.authentication;
 
 import java.util.Base64;
 
 public class BasicAuthEncoder {
     public static void main(String[] args) {
-        String username = "admin";
-        String password = "admin123";
+//        String username = "admin";
+//        String password = "admin123";
+
+        String username = "sami";
+        String password = "tekie";
 
         // Combine username and password with a colon
         String credentials = username + ":" + password;
