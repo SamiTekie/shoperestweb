@@ -10,7 +10,7 @@ public class BasicAuthTester {
         String password = "tekie";
 
         // Replace this URL with the endpoint you want to test
-        String url = "http://localhost:8080/products/10"; // Example URL
+        String url = "http://localhost:8080/products/10";
 
         //String url = "http://localhost:8080/users/1"; // Replace with the actual endpoint URL
 
