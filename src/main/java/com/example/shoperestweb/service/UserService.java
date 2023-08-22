@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,7 +27,12 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.orElse(null);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public User createUser(User user) {
@@ -35,17 +41,24 @@ public class UserService {
     }
 
     public User updateUser(Long id, User user) {
-        User existingUser = userRepository.findById(id).orElse(null);
-        if (existingUser != null) {
+        Optional<User> existingUserOptional = userRepository.findById(id);
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
             existingUser.setUsername(user.getUsername());
+
+            // Update the roles for the user
             existingUser.setRoles(user.getRoles());
-            if (user.getPassword() != null) {
-                existingUser.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password if provided
+
+            String newPassword = user.getPassword();
+            if (newPassword != null) {
+                existingUser.setPassword(passwordEncoder.encode(newPassword)); // Hash the password if provided
             }
+
             return userRepository.save(existingUser);
         }
         return null;
     }
+
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);

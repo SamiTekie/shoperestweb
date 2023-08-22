@@ -27,16 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/product-categories/**").permitAll() // Allow all for testing
-                .antMatchers("/products/**").permitAll() // Allow all for testing
-                .antMatchers(HttpMethod.POST, "/users").permitAll() // Allow unauthenticated access for user creation
+                .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
+                .antMatchers(HttpMethod.GET, "/products/**").authenticated() // Allow all for testing
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .and()
                 .httpBasic();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
