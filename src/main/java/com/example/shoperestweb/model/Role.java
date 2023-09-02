@@ -24,4 +24,9 @@ public class Role {
     public Role() {
         this.users = new HashSet<>();
     }
+
+
+    public Role(String name) {
+        this.name = name;
+    }
 }

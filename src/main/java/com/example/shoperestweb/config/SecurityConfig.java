@@ -22,12 +22,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
+
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable().authorizeRequests()
                 .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
+                .antMatchers("/users").permitAll() // Allow all for testing
                 .antMatchers(HttpMethod.GET, "/products/**").authenticated() // Allow all for testing
                 .anyRequest().authenticated()
                 .and()
