@@ -3,8 +3,6 @@ package com.example.shoperestweb.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Entity
@@ -21,15 +19,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @OneToOne(cascade = CascadeType.PERSIST) // Cascade the persist operation to Role
+    @JoinColumn(name = "role_id", unique = true) // Ensure a one-to-one relationship
+    private Role role;
 
-    public User() {
-        this.roles = new HashSet<>();
-    }
+
 }

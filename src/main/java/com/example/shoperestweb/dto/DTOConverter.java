@@ -5,10 +5,7 @@ import com.example.shoperestweb.model.ProductCategory;
 import com.example.shoperestweb.model.Role;
 import com.example.shoperestweb.model.User;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DTOConverter {
     public static ProductDTO convertToDTO(Product product) {
@@ -36,11 +33,7 @@ public class DTOConverter {
         product.setProductDescription(productDTO.getProductDescription());
 
         if (productDTO.getProductCategory() != null) {
-            ProductCategoryDTO productCategoryDTO = productDTO.getProductCategory();
-            ProductCategory productCategory = new ProductCategory();
-            productCategory.setProductCategoryId((long) productCategoryDTO.getProductCategoryId());
-            productCategory.setProductCategoryName(productCategoryDTO.getProductCategoryName());
-            product.setProductCategory(productCategory);
+            product.setProductCategory(convertToEntity(productDTO.getProductCategory()));
         }
 
         return product;
@@ -59,25 +52,32 @@ public class DTOConverter {
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword()); // Assuming password is already hashed in the User object
 
-        dto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        if (user.getRole() != null) {
+            dto.setRole(user.getRole().getName()); // Set the role name
+        }
 
         return dto;
     }
+
 
     public static User convertToEntity(UserDTO userDTO) {
         User user = new User();
         user.setUserId(userDTO.getUserId());
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword()); // Assuming password is already hashed
-        // Convert role names to roles
-        List<Role> roles = userDTO.getRoles().stream().map(roleName -> {
-            Role role = new Role();
-            role.setName(roleName); // Use setName instead of setRoleName
-            return role;
-        }).collect(Collectors.toList());
-        user.setRoles(new HashSet<>(roles)); // Make sure to create a HashSet for roles
+
+        // Create a role from the role name
+        Role role = new Role();
+        if (userDTO.getRole() != null) {
+            role.setName(userDTO.getRole()); // Set the role name
+        }
+
+        user.setRole(role);
+
         return user;
     }
+
+
 
 
     public static RoleDTO convertToDTO(Role role) {

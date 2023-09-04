@@ -1,9 +1,8 @@
 package com.example.shoperestweb.controller;
 
+import com.example.shoperestweb.dto.DTOConverter;
 import com.example.shoperestweb.dto.UserDTO;
-import com.example.shoperestweb.model.Role;
 import com.example.shoperestweb.model.User;
-import com.example.shoperestweb.service.RoleService;
 import com.example.shoperestweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,27 +10,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService; // Inject RoleService
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService; // Initialize RoleService
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public Iterable<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
@@ -42,23 +35,10 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Hash the password
+        User user = DTOConverter.convertToEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
 
-        // Parse and assign roles from the request
-        List<Role> roles = new ArrayList<>();
-        for (String roleName : userDTO.getRoles()) {
-            Role role = roleService.getRoleByName(roleName); // Use roleService to find roles
-            if (role != null) {
-                roles.add(role);
-            }
-        }
-        user.setRoles(new HashSet<>(roles));
-
-        //user.setRoles(roles);
-
-        userService.createUser(user); // Use userService to create the user
+        userService.createUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
