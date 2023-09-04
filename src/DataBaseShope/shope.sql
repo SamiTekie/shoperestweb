@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2023 at 10:20 PM
+-- Generation Time: Sep 04, 2023 at 04:25 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -87,7 +87,8 @@ CREATE TABLE `role` (
 
 INSERT INTO `role` (`role_id`, `name`) VALUES
 (1, 'ADMIN'),
-(2, 'USER');
+(2, 'USER'),
+(3, 'USER');
 
 -- --------------------------------------------------------
 
@@ -107,18 +108,15 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `role_id`) VALUES
-(1, 'sami', 'tekie', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_role`
---
-
-CREATE TABLE `user_role` (
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+(1, 'sami', '$2a$10$gld.1blzRtnrwAtb0JkmRetCdhkWlg346GJhbFVpowQ120Rh8rO2y', 1),
+(2, 'nab', '$2a$10$xQlBlwaCY8/UvJQ/G0Q48ONUrFZ5iETjXmRs4l4WbIIvyRBMc4yrK', NULL),
+(3, 'nab', '$2a$10$7/4Kj6SQN157.0YtPtOLgOPo8w8LOyL8SL0ZGbAQzX3EFTsSfonBK', NULL),
+(4, 'nab', '$2a$10$dmiylVbSt00LqLOZjjCv6.tAruxUFk6I/dOUMJzq5qeihhLf.qb.2', NULL),
+(5, 'nab', '$2a$10$9EaQ1/AlJNjy4IsLCZB8uuhtP7fCAARmDQ7.guum063e19AzcZtaW', NULL),
+(6, 'sizzy', '$2a$10$GX1p3QRtvXHT0exCRxnNi.TCZG84cUteZM/uCbjyC6Pzyg4A6yV4u', NULL),
+(7, 'sizzy', '$2a$10$9Zpb6wk6t7q53kX0.4GPpuksT.5Nc7YkkcktgQqw2Ey2kYlyWdmnW', NULL),
+(8, 'newuser', '$2a$10$g/SEo4l/nNjvov8Ns1l6xO/Zj/KFRBoHgQmqjR3Bk1hYqgg8LRefq', NULL),
+(11, 'simsim', '$2a$10$afQ8Vsd9qolXZniZtCg7FuA9RVfySfmVXqU30iS7IeB4U8p3wM.o6', 3);
 
 --
 -- Indexes for dumped tables
@@ -148,14 +146,7 @@ ALTER TABLE `role`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`),
-  ADD KEY `fk_user_role` (`role_id`);
-
---
--- Indexes for table `user_role`
---
-ALTER TABLE `user_role`
-  ADD PRIMARY KEY (`user_id`,`role_id`),
-  ADD KEY `FKa68196081fvovjhkek5m97n3y` (`role_id`);
+  ADD UNIQUE KEY `role_id` (`role_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -177,13 +168,13 @@ ALTER TABLE `product_category`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `role_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `role_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -199,14 +190,8 @@ ALTER TABLE `product`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
-
---
--- Constraints for table `user_role`
---
-ALTER TABLE `user_role`
-  ADD CONSTRAINT `FK859n2jvi8ivhui0rl0esws6o` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `FKa68196081fvovjhkek5m97n3y` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
+  ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
