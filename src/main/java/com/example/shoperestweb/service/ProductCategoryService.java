@@ -23,26 +23,34 @@ public class ProductCategoryService {
         return productCategoryRepository.findAll();
     }
 
-    public ProductCategory getProductCategoryById(int id) {
+    public ProductCategory getProductCategoryById(Long id) {
         Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(id);
         return productCategoryOptional.orElse(null);
     }
 
     public ProductCategory createProductCategory(ProductCategory productCategory) {
+        // Ensure the status is set to true when creating a category
+        productCategory.setActive(true);
+
         return productCategoryRepository.save(productCategory);
     }
 
-    public ProductCategory updateProductCategory(int id, ProductCategory productCategory) {
+    public ProductCategory updateProductCategory(Long id, ProductCategory productCategory) {
         Optional<ProductCategory> existingProductCategoryOptional = productCategoryRepository.findById(id);
         if (existingProductCategoryOptional.isPresent()) {
             ProductCategory existingProductCategory = existingProductCategoryOptional.get();
             existingProductCategory.setProductCategoryName(productCategory.getProductCategoryName());
+
+            // Preserve the existing status
+            existingProductCategory.setActive(productCategory.getActive());
+
             return productCategoryRepository.save(existingProductCategory);
         }
         return null;
     }
 
-    public void deleteProductCategory(int id) {
+
+    public void deleteProductCategory(Long id) {
         productCategoryRepository.deleteById(id);
     }
 }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCategoryDTO {
-    private int productCategoryId;
+    private Long productCategoryId;
     private String productCategoryName;
+    private Boolean active;
+
 }

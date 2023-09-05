@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDTO getProductById(@PathVariable int id) {
+    public ProductDTO getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
         return DTOConverter.convertToDTO(product);
     }
@@ -42,14 +42,15 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ProductDTO updateProduct(@PathVariable int id, @RequestBody ProductDTO productDTO) {
+    public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         Product product = DTOConverter.convertToEntity(productDTO);
         Product updatedProduct = productService.updateProduct(id, product);
         return DTOConverter.convertToDTO(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable int id) {
+    public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
+
 }

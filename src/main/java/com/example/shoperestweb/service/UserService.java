@@ -28,7 +28,6 @@ public class UserService {
     }
 
     public User updateUser(Long id, User user) {
-        // Implement update logic here, you can use userRepository.save(user) to update the user
         return userRepository.save(user);
     }
 

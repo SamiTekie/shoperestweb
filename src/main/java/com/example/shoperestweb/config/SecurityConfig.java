@@ -25,12 +25,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
-                .antMatchers("/users").permitAll() // Allow all for testing
-                .antMatchers(HttpMethod.GET, "/products/**").authenticated() // Allow all for testing
+                .antMatchers(HttpMethod.GET, "/products/**").authenticated() // Allow GET to products with authentication
+                .antMatchers(HttpMethod.POST, "/product-categories").permitAll() // Allow POST to product-categories without authentication
+                .antMatchers(HttpMethod.POST, "/products").permitAll() // Allow POST to products without authentication
+                .antMatchers(HttpMethod.PUT, "/product-categories/**").permitAll() // Allow PUT to product-categories without authentication
+                .antMatchers(HttpMethod.PUT, "/products/**").permitAll() // Allow PUT to products without authentication
+                .antMatchers(HttpMethod.DELETE, "/product-categories/**").permitAll() // Allow DELETE to product-categories without authentication
+                .antMatchers(HttpMethod.DELETE, "/products/**").permitAll() // Allow DELETE to products without authentication
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

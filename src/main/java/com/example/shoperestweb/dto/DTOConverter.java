@@ -20,8 +20,9 @@ public class DTOConverter {
 
     public static ProductCategoryDTO convertToDTO(ProductCategory productCategory) {
         ProductCategoryDTO dto = new ProductCategoryDTO();
-        dto.setProductCategoryId(Math.toIntExact(productCategory.getProductCategoryId()));
+        dto.setProductCategoryId(productCategory.getProductCategoryId());
         dto.setProductCategoryName(productCategory.getProductCategoryName());
+        dto.setActive(productCategory.getActive()); // Use the getter method to access the active field
         return dto;
     }
 
@@ -41,8 +42,9 @@ public class DTOConverter {
 
     public static ProductCategory convertToEntity(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setProductCategoryId((long) productCategoryDTO.getProductCategoryId());
+        productCategory.setProductCategoryId(productCategoryDTO.getProductCategoryId());
         productCategory.setProductCategoryName(productCategoryDTO.getProductCategoryName());
+        productCategory.setActive(productCategoryDTO.getActive()); // Use the getter method to access the active field
         return productCategory;
     }
 
@@ -58,7 +60,6 @@ public class DTOConverter {
 
         return dto;
     }
-
 
     public static User convertToEntity(UserDTO userDTO) {
         User user = new User();
@@ -76,9 +77,6 @@ public class DTOConverter {
 
         return user;
     }
-
-
-
 
     public static RoleDTO convertToDTO(Role role) {
         RoleDTO dto = new RoleDTO();

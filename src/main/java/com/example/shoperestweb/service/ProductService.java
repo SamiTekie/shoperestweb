@@ -28,14 +28,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(int id) {
-        Optional<Product> productOptional = productRepository.findById((long) id);
+    public Product getProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
         return productOptional.orElse(null);
     }
 
     public Product createProduct(Product product) {
         if (product.getProductCategory() != null) {
-            Integer productCategoryId = Math.toIntExact(product.getProductCategory().getProductCategoryId()); // Use Integer here
+            Long productCategoryId = product.getProductCategory().getProductCategoryId(); // Use Long here
             Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
             if (productCategoryOptional.isPresent()) {
                 ProductCategory productCategory = productCategoryOptional.get();
@@ -47,13 +47,13 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(int id, Product product) {
-        Optional<Product> existingProductOptional = productRepository.findById((long) id);
+    public Product updateProduct(Long id, Product product) {
+        Optional<Product> existingProductOptional = productRepository.findById(id);
         if (existingProductOptional.isPresent()) {
             Product existingProduct = existingProductOptional.get();
 
             if (product.getProductCategory() != null) {
-                Integer productCategoryId = Math.toIntExact(product.getProductCategory().getProductCategoryId()); // Use Integer here
+                Long productCategoryId = product.getProductCategory().getProductCategoryId(); // Use Long here
                 Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
                 if (productCategoryOptional.isPresent()) {
                     ProductCategory productCategory = productCategoryOptional.get();
@@ -76,8 +76,13 @@ public class ProductService {
         return null;
     }
 
-
-    public void deleteProduct(int id) {
-        productRepository.deleteById((long) id);
+    public void deleteProduct(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.setProductCategory(null); // Remove association with product category
+            productRepository.delete(product);
+        }
     }
+
 }

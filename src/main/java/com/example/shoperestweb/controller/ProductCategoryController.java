@@ -5,6 +5,7 @@ import com.example.shoperestweb.dto.ProductCategoryDTO;
 import com.example.shoperestweb.model.ProductCategory;
 import com.example.shoperestweb.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,27 +30,46 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/{id}")
-    public ProductCategoryDTO getProductCategoryById(@PathVariable int id) {
+    public ResponseEntity<ProductCategoryDTO> getProductCategoryById(@PathVariable Long id) {
         ProductCategory productCategory = productCategoryService.getProductCategoryById(id);
-        return DTOConverter.convertToDTO(productCategory);
+        if (productCategory != null) {
+            ProductCategoryDTO dto = DTOConverter.convertToDTO(productCategory);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @PostMapping
     public ProductCategoryDTO createProductCategory(@RequestBody ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = DTOConverter.convertToEntity(productCategoryDTO);
+
+        // Set the default status to true when creating a category
+        productCategory.setActive(true);
+
         ProductCategory createdProductCategory = productCategoryService.createProductCategory(productCategory);
         return DTOConverter.convertToDTO(createdProductCategory);
     }
 
+
     @PutMapping("/{id}")
-    public ProductCategoryDTO updateProductCategory(@PathVariable int id, @RequestBody ProductCategoryDTO productCategoryDTO) {
+    public ProductCategoryDTO updateProductCategory(@PathVariable Long id, @RequestBody ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = DTOConverter.convertToEntity(productCategoryDTO);
+
+        // Ensure the status is preserved when updating a category
+        ProductCategory existingProductCategory = productCategoryService.getProductCategoryById(id);
+        if (existingProductCategory != null) {
+            productCategory.setActive(existingProductCategory.getActive()); // Use getActive() here
+        }
+
         ProductCategory updatedProductCategory = productCategoryService.updateProductCategory(id, productCategory);
         return DTOConverter.convertToDTO(updatedProductCategory);
     }
 
+
     @DeleteMapping("/{id}")
-    public void deleteProductCategory(@PathVariable int id) {
+    public void deleteProductCategory(@PathVariable Long id) {
         productCategoryService.deleteProductCategory(id);
     }
 }

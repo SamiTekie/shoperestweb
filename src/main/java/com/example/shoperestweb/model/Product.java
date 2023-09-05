@@ -32,6 +32,9 @@ public class Product {
     @NotNull
     private ProductCategory productCategory;
 
+
+
+
     public Product(String productName, double productPrice,
                    String productDescription, ProductCategory productCategory) {
         this.productName = productName;

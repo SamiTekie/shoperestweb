@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +20,10 @@ public class ProductCategory {
 
     @Column(name = "product_category_name")
     private String productCategoryName;
+
+    @Column(name = "active")
+    private Boolean active;
+
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL)
+    private List<Product> products;
 }
