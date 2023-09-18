@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
-                .antMatchers(HttpMethod.GET, "/products/**").authenticated() // Allow GET to products with authentication
+                .antMatchers(HttpMethod.GET, "/products/**").permitAll() // Allow GET to products without authentication
                 .antMatchers(HttpMethod.POST, "/product-categories").permitAll() // Allow POST to product-categories without authentication
                 .antMatchers(HttpMethod.POST, "/products").permitAll() // Allow POST to products without authentication
                 .antMatchers(HttpMethod.PUT, "/product-categories/**").permitAll() // Allow PUT to product-categories without authentication
