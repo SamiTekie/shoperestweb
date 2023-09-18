@@ -31,8 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
                 .antMatchers(HttpMethod.GET, "/products/**").permitAll() // Allow GET to products without authentication
-                .antMatchers(HttpMethod.POST, "/product-categories").permitAll() // Allow POST to product-categories without authentication
-                .antMatchers(HttpMethod.POST, "/products").permitAll() // Allow POST to products without authentication
+                .antMatchers(HttpMethod.POST, "/product-categories").hasAnyRole("ADMIN", "USER") // Allow POST to product-categories for ADMIN and USER roles
+                .antMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN", "USER") // Allow POST to products for ADMIN and USER roles
+
                 .antMatchers(HttpMethod.PUT, "/product-categories/**").permitAll() // Allow PUT to product-categories without authentication
                 .antMatchers(HttpMethod.PUT, "/products/**").permitAll() // Allow PUT to products without authentication
                 .antMatchers(HttpMethod.DELETE, "/product-categories/**").permitAll() // Allow DELETE to product-categories without authentication
