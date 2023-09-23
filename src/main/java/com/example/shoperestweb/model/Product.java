@@ -1,6 +1,5 @@
 package com.example.shoperestweb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,9 +27,8 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_category_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     @NotNull
-    private ProductCategory productCategory;
+    private ProductCategory productCategory; // Use ProductCategory entity here
 
     public Product(String productName, double productPrice,
                    String productDescription, ProductCategory productCategory) {

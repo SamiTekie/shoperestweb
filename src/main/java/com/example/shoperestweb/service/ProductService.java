@@ -1,8 +1,8 @@
 package com.example.shoperestweb.service;
 
+import com.example.shoperestweb.dto.ProductDTO;
+import com.example.shoperestweb.mapper.ProductMapper;
 import com.example.shoperestweb.model.Product;
-import com.example.shoperestweb.model.ProductCategory;
-import com.example.shoperestweb.repository.ProductCategoryRepository;
 import com.example.shoperestweb.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,79 +10,52 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProductCategoryRepository productCategoryRepository;
+    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductService(ProductRepository productRepository,
-                          ProductCategoryRepository productCategoryRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
-        this.productCategoryRepository = productCategoryRepository;
+        this.productMapper = productMapper;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long id) {
+    public ProductDTO getProductById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.orElse(null);
+        return productOptional.map(productMapper::toDTO).orElse(null);
     }
 
-    public Product createProduct(Product product) {
-        if (product.getProductCategory() != null) {
-            Long productCategoryId = product.getProductCategory().getProductCategoryId(); // Use Long here
-            Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
-            if (productCategoryOptional.isPresent()) {
-                ProductCategory productCategory = productCategoryOptional.get();
-                product.setProductCategory(productCategory);
-            } else {
-                throw new IllegalArgumentException("Invalid Product Category");
-            }
-        }
-        return productRepository.save(product);
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Product product = productMapper.toEntity(productDTO);
+        Product createdProduct = productRepository.save(product);
+        return productMapper.toDTO(createdProduct);
     }
 
-    public Product updateProduct(Long id, Product product) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Optional<Product> existingProductOptional = productRepository.findById(id);
         if (existingProductOptional.isPresent()) {
             Product existingProduct = existingProductOptional.get();
-
-            if (product.getProductCategory() != null) {
-                Long productCategoryId = product.getProductCategory().getProductCategoryId(); // Use Long here
-                Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
-                if (productCategoryOptional.isPresent()) {
-                    ProductCategory productCategory = productCategoryOptional.get();
-                    existingProduct.setProductName(product.getProductName());
-                    existingProduct.setProductPrice(product.getProductPrice());
-                    existingProduct.setProductDescription(product.getProductDescription());
-                    existingProduct.setProductCategory(productCategory);
-                } else {
-                    throw new IllegalArgumentException("Invalid Product Category");
-                }
-            } else {
-                existingProduct.setProductName(product.getProductName());
-                existingProduct.setProductPrice(product.getProductPrice());
-                existingProduct.setProductDescription(product.getProductDescription());
-                existingProduct.setProductCategory(null);
-            }
-
-            return productRepository.save(existingProduct);
+            existingProduct.setProductName(productDTO.getProductName());
+            existingProduct.setProductPrice(productDTO.getProductPrice());
+            existingProduct.setProductDescription(productDTO.getProductDescription());
+            Product updatedProduct = productRepository.save(existingProduct);
+            return productMapper.toDTO(updatedProduct);
         }
         return null;
     }
 
     public void deleteProduct(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            product.setProductCategory(null); // Remove association with product category
-            productRepository.delete(product);
-        }
+        productRepository.deleteById(id);
     }
-
 }

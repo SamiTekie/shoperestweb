@@ -12,5 +12,6 @@ public class ProductDTO {
     private String productName;
     private double productPrice;
     private String productDescription;
-    private ProductCategoryDTO productCategory;
+    private ProductCategoryDTO productCategory; // Use ProductCategoryDTO here
+
 }

@@ -31,19 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
                 .antMatchers(HttpMethod.GET, "/products/**").permitAll() // Allow GET to products without authentication
-                .antMatchers(HttpMethod.POST, "/product-categories").hasAnyRole("ADMIN", "USER") // Allow POST to product-categories for ADMIN and USER roles
-                .antMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN", "USER") // Allow POST to products for ADMIN and USER roles
-
-                .antMatchers(HttpMethod.PUT, "/product-categories/**").permitAll() // Allow PUT to product-categories without authentication
-                .antMatchers(HttpMethod.PUT, "/products/**").permitAll() // Allow PUT to products without authentication
-                .antMatchers(HttpMethod.DELETE, "/product-categories/**").permitAll() // Allow DELETE to product-categories without authentication
-                .antMatchers(HttpMethod.DELETE, "/products/**").permitAll() // Allow DELETE to products without authentication
+                .antMatchers(HttpMethod.POST, "/product-categories", "/products").hasAnyRole("ADMIN", "USER") // Allow POST to product-categories and products for ADMIN and USER roles
+                .antMatchers(HttpMethod.PUT, "/product-categories/**", "/products/**").hasRole("ADMIN") // Allow PUT to product-categories and products only for ADMIN role
+                .antMatchers(HttpMethod.DELETE, "/product-categories/**", "/products/**").hasRole("ADMIN") // Allow DELETE to product-categories and products only for ADMIN role
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .and()
                 .httpBasic();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

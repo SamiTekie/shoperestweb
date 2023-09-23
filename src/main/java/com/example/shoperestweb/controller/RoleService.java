@@ -1,15 +1,13 @@
-package com.example.shoperestweb.service;
+package com.example.shoperestweb.controller;
 
 import com.example.shoperestweb.dto.RoleDTO;
+import com.example.shoperestweb.mapper.RoleMapper;
 import com.example.shoperestweb.model.Role;
 import com.example.shoperestweb.repository.RoleRepository;
-import com.example.shoperestweb.mapper.RoleMapper; // Import the RoleMapper
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,16 +37,16 @@ public class RoleService {
         return null;
     }
 
-    public void createRole(Role role) {
+    public void createRole(RoleDTO roleDTO) {
+        Role role = roleMapper.toEntity(roleDTO); // Convert RoleDTO to Role
         roleRepository.save(role);
     }
 
-    public RoleDTO updateRole(Long id, Role role) {
-        Optional<Role> existingRoleOptional = roleRepository.findById(id);
-        if (existingRoleOptional.isPresent()) {
-            Role existingRole = existingRoleOptional.get();
-            existingRole.setName(role.getName());
-            Role updatedRole = roleRepository.save(existingRole);
+    public RoleDTO updateRole(Long id, RoleDTO roleDTO) {
+        Role role = roleMapper.toEntity(roleDTO); // Convert RoleDTO to Role
+        role.setRoleId(id);
+        Role updatedRole = roleRepository.save(role);
+        if (updatedRole != null) {
             return roleMapper.toDTO(updatedRole);
         }
         return null;
