@@ -1,17 +1,14 @@
 package com.example.shoperestweb.controller;
 
 import com.example.shoperestweb.dto.UserDTO;
-import com.example.shoperestweb.model.User;
 import com.example.shoperestweb.service.UserService;
-import com.example.shoperestweb.mapper.UserMapper; // Import the UserMapper
-
+import com.example.shoperestweb.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,31 +17,25 @@ public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper; // Inject the UserMapper
+    private final UserMapper userMapper;
 
     @Autowired
     public UserController(UserService userService, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper; // Initialize the UserMapper
+        this.userMapper = userMapper;
     }
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
-        Iterable<User> users = userService.getAllUsers();
-        List<UserDTO> userDTOs = new ArrayList<>();
-        for (User user : users) {
-            userDTOs.add(userMapper.toDTO(user)); // Map User to UserDTO
-        }
-        return userDTOs;
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if (user != null) {
-            UserDTO dto = userMapper.toDTO(user); // Convert User to UserDTO
-            return ResponseEntity.ok(dto);
+        UserDTO userDTO = userService.getUserById(id);
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -52,29 +43,23 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO); // Convert UserDTO to User
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
-
-        userService.createUser(user);
-
+        userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO); // Convert UserDTO to User
-
-        User updatedUser = userService.updateUser(id, user);
-        if (updatedUser != null) {
-            UserDTO dto = userMapper.toDTO(updatedUser); // Convert User to UserDTO
-            return ResponseEntity.ok(dto);
+        UserDTO updatedUserDTO = userService.updateUser(id, userDTO);
+        if (updatedUserDTO != null) {
+            return ResponseEntity.ok(updatedUserDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
     }
 }

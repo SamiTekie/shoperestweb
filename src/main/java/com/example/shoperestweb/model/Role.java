@@ -1,11 +1,13 @@
 package com.example.shoperestweb.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "role")
 public class Role {
     @Id
@@ -13,9 +15,10 @@ public class Role {
     @Column(name = "role_id")
     private Long roleId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role_name")
+    private String roleName;
 
-    @OneToOne(mappedBy = "role") // This establishes the bidirectional relationship
-    private User user;
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 }
