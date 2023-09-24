@@ -1,11 +1,14 @@
 package com.example.shoperestweb.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "user")
 public class User {
     @Id
@@ -19,9 +22,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToOne(cascade = CascadeType.PERSIST) // Cascade the persist operation to Role
-    @JoinColumn(name = "role_id", unique = true) // Ensure a one-to-one relationship
+    @ManyToOne(fetch = FetchType.LAZY) // Many users can have the same role
+    @JoinColumn(name = "role_id") // Foreign key to the Role entity
+    @NotNull
     private Role role;
-
 
 }

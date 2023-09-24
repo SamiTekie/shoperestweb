@@ -28,7 +28,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_category_id")
     @NotNull
-    private ProductCategory productCategory; // Use ProductCategory entity here
+    private ProductCategory productCategory;
 
     public Product(String productName, double productPrice,
                    String productDescription, ProductCategory productCategory) {
