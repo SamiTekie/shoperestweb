@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 05, 2023 at 03:05 PM
+-- Generation Time: Sep 24, 2023 at 02:55 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -65,7 +65,8 @@ CREATE TABLE `product_category` (
 INSERT INTO `product_category` (`product_category_id`, `product_category_name`, `active`) VALUES
 (2, 'Sport Shoes', 1),
 (3, 'sport Wear', 1),
-(5, 'Example Category', 1);
+(5, 'Example Category', 1),
+(7, 'Sizzy Brizzy', 1);
 
 -- --------------------------------------------------------
 
@@ -84,8 +85,7 @@ CREATE TABLE `role` (
 
 INSERT INTO `role` (`role_id`, `name`) VALUES
 (1, 'ADMIN'),
-(2, 'USER'),
-(3, 'USER');
+(2, 'USER');
 
 -- --------------------------------------------------------
 
@@ -113,7 +113,7 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `role_id`) VALUES
 (6, 'sizzy', '$2a$10$GX1p3QRtvXHT0exCRxnNi.TCZG84cUteZM/uCbjyC6Pzyg4A6yV4u', NULL),
 (7, 'sizzy', '$2a$10$9Zpb6wk6t7q53kX0.4GPpuksT.5Nc7YkkcktgQqw2Ey2kYlyWdmnW', NULL),
 (8, 'newuser', '$2a$10$g/SEo4l/nNjvov8Ns1l6xO/Zj/KFRBoHgQmqjR3Bk1hYqgg8LRefq', NULL),
-(11, 'simsim', '$2a$10$afQ8Vsd9qolXZniZtCg7FuA9RVfySfmVXqU30iS7IeB4U8p3wM.o6', 3);
+(11, 'simsim', '$2a$10$afQ8Vsd9qolXZniZtCg7FuA9RVfySfmVXqU30iS7IeB4U8p3wM.o6', 2);
 
 --
 -- Indexes for dumped tables
@@ -159,13 +159,13 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `product_category`
 --
 ALTER TABLE `product_category`
-  MODIFY `product_category_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `product_category_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `role_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `role_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
