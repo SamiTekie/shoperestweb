@@ -29,8 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
-                .antMatchers(HttpMethod.GET, "/products/**").permitAll() // Allow GET to products without authentication
+                //.antMatchers("/product-categories/**", "/users").permitAll() // Allow all for testing
+                .antMatchers(HttpMethod.GET, "/product-categories/**", "/products/**").permitAll() // Allow GET to product-categories and products without authentication
                 .antMatchers(HttpMethod.POST, "/product-categories", "/products").hasAnyRole("ADMIN", "USER") // Allow POST to product-categories and products for ADMIN and USER roles
                 .antMatchers(HttpMethod.PUT, "/product-categories/**", "/products/**").hasRole("ADMIN") // Allow PUT to product-categories and products only for ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/product-categories/**", "/products/**").hasRole("ADMIN") // Allow DELETE to product-categories and products only for ADMIN role
